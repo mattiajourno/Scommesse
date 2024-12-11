@@ -77,6 +77,10 @@ for section in all_sections:
                 else:
                     home_team_wins = None
                     match_ties = None
+                if home_team_wins ==0 and match_ties==0:
+                    home_team_looses=1
+                else:
+                    home_team_looses=0
 
                 # Save data with Match ID
                 all_matches.append({
@@ -90,7 +94,9 @@ for section in all_sections:
                     "Draw Percentage": draw_percentage,
                     "Loss Percentage": loss_percentage,
                     "Home Team Wins": home_team_wins,
-                    "Match Ties": match_ties
+                    
+                    "Match Ties": match_ties,
+                     "Home Team Looses": home_team_looses,
                 })
 
                 print(f"Match ID: {match_id} | {home_team} vs {away_team} | Time: {match_time} | "
@@ -121,7 +127,7 @@ driver.quit()
 
 # Save results to an Excel file
 df = pd.DataFrame(all_matches)
-output_file = "Past_results_matches.xlsx"
+output_file = "Past_Results_matches.xlsx"
 df.to_excel(output_file, index=False)
 
 print(f"All matches data saved to {output_file}")
