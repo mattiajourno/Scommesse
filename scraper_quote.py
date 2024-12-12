@@ -6,10 +6,18 @@ from selenium.webdriver.support import expected_conditions as EC
 import pandas as pd
 import numpy as np
 import time
+import platform
 
-# Initialize WebDriver
-service = Service("C:/Program Files (x86)/chromedriver.exe")  # Update with your ChromeDriver path
-driver = webdriver.Chrome(service=service)
+match platform.system():
+    case "Linux":
+        options = webdriver.FirefoxOptions()
+        options.add_argument("-headless")
+        driver = webdriver.Firefox(options=options)
+    case "Windows":
+        service = Service("C:/Program Files (x86)/chromedriver.exe")
+        driver = webdriver.Chrome(service=service)
+    case _:
+        raise NotImplementedError("Not implemented in this OS")
 
 # Open the target URL
 url = "https://www.oddsportal.com/it/search/results/:zVqqL0ma/page/1/"  # Replace with the actual URL
