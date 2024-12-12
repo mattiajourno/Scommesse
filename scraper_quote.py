@@ -36,8 +36,6 @@ class OddScraper:
         # Initialize list for storing results
         all_data = []
         
-        Accuracy = 0
-        n = 0
         
         # Process up to 10 pages
         for page in range(1, num_pages):  # Loop from page 1 to page 10
@@ -56,7 +54,6 @@ class OddScraper:
                         # Extract odds for the game
                         odds_elements = game.find_elements(By.CSS_SELECTOR, 'p.height-content')
                         odds = [odd.text for odd in odds_elements]
-                        n += 1
         
                         # Initialize result vector as all zeros
                         result_vector = [0, 0, 0]
@@ -75,15 +72,10 @@ class OddScraper:
                                 "Odds (1)": float(odds[0]),
                                 "Odds (X)": float(odds[1]),
                                 "Odds (2)": float(odds[2]),
-                                "P (1)": 0.95 / float(odds[0]),
-                                "P (X)": 0.95 / float(odds[1]),
-                                "P (2)": 0.95 / float(odds[2]),
                                 "Victory": result_vector[0],
                                 "Tie": result_vector[1],
                                 "Loss": result_vector[2],
                             }
-                            P = [0.95 / float(odds[0]), 0.95 / float(odds[1]), 0.95 / float(odds[2])]
-                            Accuracy += np.dot(P, result_vector)
         
                             # Append match data to the single list
                             all_data.append(match_data)
@@ -99,7 +91,7 @@ class OddScraper:
                         continue
         
                 # Click the next page button
-                if page < 10:  # Avoid clicking next on the last page
+                if page < num_pages:  # Avoid clicking next on the last page
                     try:
                         next_button = WebDriverWait(driver, 10).until(
                             EC.presence_of_element_located((By.XPATH, f"//a[@data-number='{page + 1}']"))
@@ -119,10 +111,6 @@ class OddScraper:
             except Exception as e:
                 print(f"Error processing page {page}: {e}")
                 break
-        
-        # Calculate accuracy
-        Accuracy /= n
-        print(f"Accuracy: {Accuracy}")
         
         # Close WebDriver
         driver.quit()
