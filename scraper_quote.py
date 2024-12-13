@@ -72,6 +72,9 @@ class OddScraper:
                         odds_elements = game.find_elements(By.CSS_SELECTOR, 'p.height-content')
                         odds = [odd.text for odd in odds_elements]
         
+                        teams_elements = game.find_elements(By.CSS_SELECTOR, 'p.participant-name')
+                        teams = [team.text for team in teams_elements]
+                        
                         # Initialize result vector as all zeros
                         result_vector = [0, 0, 0]
         
@@ -86,6 +89,8 @@ class OddScraper:
                             match_data = {
                                 "Page": page,
                                 "Match ID": i,
+                                "Team (1)": teams[0],
+                                "Team (2)": teams[1],
                                 "Odds (1)": float(odds[0]),
                                 "Odds (X)": float(odds[1]),
                                 "Odds (2)": float(odds[2]),
