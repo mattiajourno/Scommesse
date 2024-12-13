@@ -38,7 +38,24 @@ class OddScraper:
         
         
         # Process up to 10 pages
-        for page in range(1, num_pages):  # Loop from page 1 to page 10
+        for page in range(1, num_pages + 1):  # Loop from page 1 to final page
+            # Click the next page button
+            if page > 1:  # Avoid clicking next on the first page
+                try:
+                    next_button = WebDriverWait(driver, 10).until(
+                        EC.presence_of_element_located((By.XPATH, f"//a[@data-number='{page + 1}']"))
+                    )
+    
+                    # Scroll to the next button to ensure it's in the viewport
+                    driver.execute_script("arguments[0].scrollIntoView(true);", next_button)
+                    time.sleep(1)  # Allow scrolling time
+    
+                    # Use JavaScript to click the button
+                    driver.execute_script("arguments[0].click();", next_button)
+                    time.sleep(3)  # Allow time for the next page to load
+                except Exception as e:
+                    print(f"Error clicking next button for page {page}: {e}")
+                    break
             print(f"Processing page {page}...")
             try:
                 # Wait for the page to load
@@ -90,24 +107,7 @@ class OddScraper:
                         print(f"Error processing game {i} on page {page}: {e}")
                         continue
         
-                # Click the next page button
-                if page < num_pages:  # Avoid clicking next on the last page
-                    try:
-                        next_button = WebDriverWait(driver, 10).until(
-                            EC.presence_of_element_located((By.XPATH, f"//a[@data-number='{page + 1}']"))
-                        )
-        
-                        # Scroll to the next button to ensure it's in the viewport
-                        driver.execute_script("arguments[0].scrollIntoView(true);", next_button)
-                        time.sleep(1)  # Allow scrolling time
-        
-                        # Use JavaScript to click the button
-                        driver.execute_script("arguments[0].click();", next_button)
-                        time.sleep(3)  # Allow time for the next page to load
-                    except Exception as e:
-                        print(f"Error clicking next button for page {page}: {e}")
-                        break
-        
+
             except Exception as e:
                 print(f"Error processing page {page}: {e}")
                 break
